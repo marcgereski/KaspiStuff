@@ -44,6 +44,18 @@ github:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.github.com/user
+google:
+    client:
+      clientId: 147831215911-rus2gotlcc8qm4j0n3ivu8th7erfr5jq.apps.googleusercontent.com
+      clientSecret: -XcC_G68S1i-GzdpO-3PJ1VW
+      accessTokenUri: https://accounts.google.com/o/oauth2/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      tokenName: oauth_token
+      authenticationScheme: query
+      clientAuthenticationScheme: form
+      scope: openid profile
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
 
 logging:
   level:

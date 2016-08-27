@@ -52,6 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @ConfigurationProperties("google")
+    ClientResources google() {
+        return new ClientResources();
+    }
+
+    @Bean
     public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(filter);
@@ -88,6 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         List<Filter> filters = new ArrayList<>();
         filters.add(oauth2Filter(facebook(), "/login/facebook"));
         filters.add(oauth2Filter(github(), "/login/github"));
+        filters.add(oauth2Filter(google(), "/login/google"));
         filters.add(customFilter("/login/simple"));
         filter.setFilters(filters);
         return filter;
