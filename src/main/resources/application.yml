@@ -1,28 +1,24 @@
-#security:
-#  oauth2:
-#    client:
-#      clientId: 147831215911-rus2gotlcc8qm4j0n3ivu8th7erfr5jq.apps.googleusercontent.com
-#      clientSecret: -XcC_G68S1i-GzdpO-3PJ1VW
-#      accessTokenUri: https://accounts.google.com/o/oauth2/token
-#      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
-#      tokenName: oauth_token
-#      authenticationScheme: query
-#      clientAuthenticationScheme: form
-#      scope: openid profile
-#    resource:
-#      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
-#
-#server:
-#  port: 8080
+spring:
+  datasource:
+    url: jdbc:h2:mem:STUFF;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
 
+  thymeleaf:
+    cache: false
 
-security:
-  oauth2:
-    client:
-      client-id: acme
-      client-secret: acmesecret
-      scope: read,write
-      auto-approve-scopes: '.*'
+hibernate:
+  show_sql: true
+  hbm2ddl.auto: create
+entitymanager:
+  packagesToScan: kz.kaspi.stuff
 
 facebook:
   client:
@@ -61,6 +57,3 @@ logging:
   level:
     org.springframework.security: DEBUG
 
-spring:
-  thymeleaf:
-    cache: false
