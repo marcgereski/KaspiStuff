@@ -18,19 +18,16 @@
 <body ng-app="app" ng-controller="home as home">
 <h1>Login</h1>
 <div class="container" ng-show="!home.authenticated">
-    <div>
+<!--    <div>
         With Facebook: <a href="/login/facebook">click here</a>
-    </div>
-    <div>
-        With Github: <a href="/login/github">click here</a>
-    </div>
+    </div>-->
     <div>
         With Google: <a href="/login/google">click here</a>
     </div>
     <div>
         <form action="/login/simple" method="post">
-            <div><label> User Name : <input type="text" name="username" value="username"/> </label></div>
-            <div><label> Password: <input type="password" name="password" value="password"/> </label></div>
+            <div><label> User Name : <input type="text" name="username" value="Mathew"/> </label></div>
+            <div><label> Password: <input type="password" name="password" value="12345"/> </label></div>
             <div><input type="submit" value="Sign In"/></div>
         </form>
     </div>
@@ -72,6 +69,16 @@
                 self.authenticated = false;
             });
         };
+    });
+</script>
+
+<script>
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
     });
 </script>
 </body>

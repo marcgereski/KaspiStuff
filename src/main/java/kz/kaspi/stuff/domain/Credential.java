@@ -1,7 +1,15 @@
 package kz.kaspi.stuff.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "CREDENTIALS")
 public class Credential {
+    @Id
+    @Column(name = "FK_USER_ID")
     private Long userId;
+
+    @Column(name = "PASS")
     private String pass;
 
     public Credential() {

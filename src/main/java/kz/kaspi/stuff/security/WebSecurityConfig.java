@@ -1,6 +1,7 @@
 package kz.kaspi.stuff.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -31,11 +34,15 @@ import java.util.List;
 @Configuration
 @EnableOAuth2Client
 @EnableAuthorizationServer
+@EnableWebSecurity
 @Order(6)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${entitymanager.testing}")
     private boolean isTestingMode;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     OAuth2ClientContext oauth2ClientContext;
@@ -94,8 +101,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("username").password("password").roles("USER");
+//        auth.inMemoryAuthentication().withUser("username").password("password").roles("USER");
+        auth.userDetailsService(userDetailsService);
     }
 
     private Filter securityFilter() throws Exception {

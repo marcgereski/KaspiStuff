@@ -59,13 +59,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
-<!--        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>4.0.3.RELEASE</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -91,6 +84,11 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
 

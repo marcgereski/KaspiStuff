@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>where's my stuff?</title>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body ng-app="app" ng-controller="home as home">
+
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h1>where's my stuff?</h1>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <span ng-show="home.authenticated">
+                            <a href="#"><span ng-bind="home.user"></span></a>
+                        </span>
+                        <span ng-show="!home.authenticated">
+                            <a href="/login">sign in</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding: 1em">
+                <div class="panel panel-default">
+                    <div class="row" style="padding: 1em">
+                        <div class="col-xs-6">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-xs-10">
+                                        <div id="preview">
+                                            <img id="image" th:src="${user.pic}"/>
+                                        </div>
+                                        <input type="file" id="the-photo-file-field"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="username" class="col-xs-2">username:</label>
+                                    <div class="col-xs-10">
+                                        <input type="text" class="form-control" id="username" th:value="${user.username}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="col-xs-2">email:</label>
+                                    <div class="col-xs-10">
+                                        <input type="text" class="form-control" id="email" th:value="${user.email}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role" class="col-xs-2">role:</label>
+                                    <div class="col-xs-10">
+                                        <input type="text" class="form-control" id="role" th:value="${user.role.role}" readonly="readonly" />
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-10 col-xs-offset-2">
+                                    <button id="save" class="btn btn-primary" onclick="submitProfile()">save</button>
+                                    <button id="back" class="btn btn-default" onclick="window.history.back()">back</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input id="userId" type="hidden" th:value="${user.userId}" />
+
+
+<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
+<script type="text/javascript">
+    angular
+            .module("app", [])
+            .config(
+                    function ($httpProvider) {
+                        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                    }).controller("home", function ($http, $location) {
+        var self = this;
+        $http.get("/user").success(function (data) {
+            if (data.name) {
+                self.user = data.name;
+                self.authenticated = true;
+            } else {
+                self.user = "N/A";
+                self.authenticated = false;
+            }
+        }).error(function () {
+            self.user = "N/A";
+            self.authenticated = false;
+        });
+        self.logout = function () {
+            $http.post('logout', {}).success(function () {
+                self.authenticated = false;
+                $location.path("/");
+            }).error(function (data) {
+                console.log("Logout failed")
+                self.authenticated = false;
+            });
+        };
+    });
+</script>
+
+<script>
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+    });
+
+    function submitProfile() {
+        var uid = document.getElementById("userId").value;
+        var user = {
+            userid: uid,
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            role: document.getElementById("role").value,
+            pic: document.getElementById("image").src
+        };
+
+        $.ajax({
+            url: 'edit-user',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(user),
+            contentType: 'application/json',
+            success: function (data) {
+                alert(data.status + ": " + data.message);
+            }, error: function () {
+                alert(data.status + ": " + data.message);
+            }
+        });
+    }
+</script>
+
+<!--<script type="text/javascript">
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+        function renderImage(file){
+            var reader = new FileReader();
+            reader.onload = function(event){
+                the_url = event.target.result;
+                $('#preview').html("<img id='image' src='"+the_url+"' />");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        $("#the-file-input").change(function () {
+            console.log(this.files);
+            renderImage(this.files[0]);
+        });
+
+        $("#the-photo-file-field").change(function () {
+            console.log(this.files[0].size);
+            renderImage(this.files[0]);
+
+        });
+    }
+</script>-->
+</body>
+</html>
