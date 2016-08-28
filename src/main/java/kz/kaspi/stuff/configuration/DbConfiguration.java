@@ -1,12 +1,14 @@
 package kz.kaspi.stuff.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -16,6 +18,9 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan
+
+@EntityScan(basePackages = {"kz.kaspi.stuff.domain"})
+@EnableJpaRepositories(basePackages = {"kz.kaspi.stuff.dao"})
 public class DbConfiguration {
     @Value("${spring.datasource.username}")
     private String USERNAME;
@@ -26,13 +31,13 @@ public class DbConfiguration {
     @Value("${spring.datasource.url}")
     private String URL;
 
-    @Value("${hibernate.dialect}")
+    @Value("${spring.jpa.database-platform}")
     private String HIBERNATE_DIALECT;
 
-    @Value("${hibernate.show_sql}")
+    @Value("${spring.jpa.show-sql}")
     private String HIBERNATE_SHOW_SQL;
 
-    @Value("${hibernate.hbm2ddl.auto}")
+    @Value("${spring.jpa.hibernate.ddl-auto}")
     private String HIBERNATE_HBM2DDL_AUTO;
 
     @Value("${entitymanager.packagesToScan}")

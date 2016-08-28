@@ -1,6 +1,7 @@
 package kz.kaspi.stuff.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -19,6 +20,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
 
@@ -31,6 +33,10 @@ import java.util.List;
 @EnableAuthorizationServer
 @Order(6)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${entitymanager.testing}")
+    private boolean isTestingMode;
+
     @Autowired
     OAuth2ClientContext oauth2ClientContext;
 
@@ -65,17 +71,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**", "/h2-console/**").permitAll()
+                .antMatchers("/", "/login**", "/webjars/**", "/console**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .and().formLogin().loginPage("/login")
                 .and().logout()
                 .logoutSuccessUrl("/").permitAll()
-                .and().addFilterBefore(securityFilter(), BasicAuthenticationFilter.class)
-                .csrf().disable()
+                .and().addFilterBefore(securityFilter(), BasicAuthenticationFilter.class);
+
+        // this line is used for H2 web console
+        if (isTestingMode) {
+            http.csrf().disable();
+            // this is used for H2 web console
+            http.headers().frameOptions().disable();
+        } else {
+            http
 //				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        ;
+                    .csrf();
+        }
     }
 
     @Autowired

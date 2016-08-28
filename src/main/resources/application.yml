@@ -1,24 +1,29 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:STUFF;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:KSTUFF;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
     password:
+    data: classpath:/sql/data.sql
+    schema: classpath:/sql/schema.sql
+    initialize: true
   h2:
     console:
-      enabled: false
-      path: /h2-console
+      enabled: true
+      path: /console
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: none
 
   thymeleaf:
     cache: false
 
-hibernate:
-  show_sql: true
-  hbm2ddl.auto: create
 entitymanager:
   packagesToScan: kz.kaspi.stuff
+  testing: true
 
 facebook:
   client:
