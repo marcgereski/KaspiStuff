@@ -190,11 +190,14 @@ public class MainController {
         return new Response(Response.Status.OK, "Succeed");
     }
 
+    @SuppressWarnings("unchecked")
     private String getAuthenticatedUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) ((OAuth2Authentication) auth)
                 .getUserAuthentication().getDetails();
-        String token = details.get("sub");;
+        String token = details.get("sub");
+
         if (token != null) {
             User user = credDAO.getUserByToken(token);
             return user != null ? user.getUsername() : null;
