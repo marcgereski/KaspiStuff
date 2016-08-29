@@ -194,9 +194,12 @@ public class MainController {
     private String getAuthenticatedUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) ((OAuth2Authentication) auth)
-                .getUserAuthentication().getDetails();
-        String token = details.get("sub");
+        String token = null;
+        if (auth instanceof OAuth2Authentication) {
+            LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) ((OAuth2Authentication) auth)
+                    .getUserAuthentication().getDetails();
+            token = details.get("sub");
+        }
 
         if (token != null) {
             User user = credDAO.getUserByToken(token);
