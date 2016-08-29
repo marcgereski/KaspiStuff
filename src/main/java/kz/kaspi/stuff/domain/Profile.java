@@ -6,16 +6,18 @@ public class Profile {
     private String email;
     private String role;
     private String pic;
+    private String password;
 
     public Profile() {
     }
 
-    public Profile(Long userid, String username, String email, String role, String pic) {
+    public Profile(Long userid, String username, String email, String role, String password, String pic) {
         this.username = username;
         this.email = email;
         this.role = role;
         this.pic = pic;
         this.userid = userid;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -80,4 +82,12 @@ public class Profile {
         return userid != null;
     }
 
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

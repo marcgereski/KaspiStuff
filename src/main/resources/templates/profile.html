@@ -24,6 +24,8 @@
                     <div class="col-sm-6 text-right">
                         <span ng-show="home.authenticated">
                             <a href="#"><span ng-bind="home.user"></span></a>
+                            <br/>
+                            <a href="/login">logout</a>
                         </span>
                         <span ng-show="!home.authenticated">
                             <a href="/login">sign in</a>
@@ -67,7 +69,13 @@
                                 </div>
 
                                 <div class="col-xs-10 col-xs-offset-2">
-                                    <button id="back" class="btn btn-default" onclick="window.location.href='/all-questions'">back</button>
+                                    <span ng-show="!home.authenticated">
+                                        <button id="edit" class="btn btn-primary"
+                                            onclick="window.location.href='/login'">edit</button>
+                                    </span>
+                                    <button id="back" class="btn btn-default"
+                                            onclick="window.location.href='/all-questions'">back
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -78,7 +86,7 @@
     </div>
 </div>
 
-<input id="userId" type="hidden" th:value="${user.userId}"/>
+<input id="id" type="hidden" th:value="${user.userId}"/>
 
 
 <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>

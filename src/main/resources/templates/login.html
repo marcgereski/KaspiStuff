@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Demo</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width" />
-    <base href="/" />
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
     <link rel="stylesheet" type="text/css"
-          href="/webjars/bootstrap/css/bootstrap.min.css" />
+          href="/webjars/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript"
             src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -16,27 +16,47 @@
 </head>
 
 <body ng-app="app" ng-controller="home as home">
-<h1>Login</h1>
-<div class="container" ng-show="!home.authenticated">
-<!--    <div>
-        With Facebook: <a href="/login/facebook">click here</a>
-    </div>-->
-    <div>
-        With Google: <a href="/login/google">click here</a>
-    </div>
-    <div>
-        <form action="/login/simple" method="post">
-            <div><label> User Name : <input type="text" name="username" value="Mathew"/> </label></div>
-            <div><label> Password: <input type="password" name="password" value="12345"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
-        </form>
-    </div>
-</div>
-<div class="container" ng-show="home.authenticated">
-    Logged in as: <span ng-bind="home.user"></span>
-    <div>
-        <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
-    </div>
+<div class="container">
+    <!--    <div>
+            With Facebook: <a href="/login/facebook">click here</a>
+        </div>-->
+    <table class="table">
+        <tr>
+            <td>
+                <div class="form-group">
+                    <h1 ng-show="!home.authenticated">login</h1>
+                    <h1 ng-show="home.authenticated">logout</h1>
+
+                    <form action="/login/simple" method="post">
+                        <div class="form-group"><input type="text" name="username" value="Mathew" placeholder="username"/></div>
+                        <div class="form-group"><input type="password" name="password" value="12345" placeholder="password"/></div>
+                        <div class="form-group" ng-show="!home.authenticated">
+                            <button type="submit" class="btn btn-primary">sign in</button>
+                        </div>
+                    </form>
+                    <div class="form-group" ng-show="!home.authenticated">
+                        sign in using <a href="/login/google" class="btn btn-danger">Google</a>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="home.authenticated">
+                    <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
+                </div>
+                <button id="back_" class="btn btn-default" onclick="window.location.href='/all-questions'">back
+                </button>
+            </td>
+            <td>
+                <div class="form-group" ng-show="!home.authenticated">
+                    <h1 ng-show="!home.authenticated">sign out</h1>
+                        <div class="form-group"><input type="text" id="username" placeholder="username"/></div>
+                        <div class="form-group"><input type="text" id="email" placeholder="email"/></div>
+                        <div class="form-group"><input type="password" id="password" placeholder="password"/></div>
+                        <div class="form-group" ng-show="!home.authenticated">
+                            <button class="btn btn-primary" onclick="submitProfile()">sign out</button>
+                        </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
@@ -44,11 +64,11 @@
     angular
             .module("app", [])
             .config(
-                    function($httpProvider) {
+                    function ($httpProvider) {
                         $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-                    }).controller("home", function($http, $location) {
+                    }).controller("home", function ($http, $location) {
         var self = this;
-        $http.get("/user").success(function(data) {
+        $http.get("/user").success(function (data) {
             if (data.name) {
                 self.user = data.name;
                 self.authenticated = true;
@@ -56,15 +76,15 @@
                 self.user = "N/A";
                 self.authenticated = false;
             }
-        }).error(function() {
+        }).error(function () {
             self.user = "N/A";
             self.authenticated = false;
         });
-        self.logout = function() {
-            $http.post('logout', {}).success(function() {
+        self.logout = function () {
+            $http.post('logout', {}).success(function () {
                 self.authenticated = false;
                 $location.path("/");
-            }).error(function(data) {
+            }).error(function (data) {
                 console.log("Logout failed")
                 self.authenticated = false;
             });
@@ -80,6 +100,32 @@
             xhr.setRequestHeader(header, token);
         });
     });
+</script>
+
+<script>
+    function submitProfile() {
+        var user = {
+            userid: 0,
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            role: "ROLE_USER",
+            pic: ""
+        };
+
+        $.ajax({
+            url: 'add-user',
+            type: 'POST',
+            dataType: 'json',
+            data: user,
+            contentType: 'application/json',
+            success: function (data) {
+                alert(data.status + ": " + data.message);
+            }, error: function () {
+                alert(data.status + ": " + data.message);
+            }
+        });
+    }
 </script>
 </body>
 </html>

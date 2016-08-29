@@ -38,7 +38,6 @@
                 <div class="col-sm-6">
                     <ul>
                         <li style="display: inline">categories:</li>
-                        <li style="display: inline"><a href="#">all</a></li>
                         <li style="display: inline" th:each="ctg : ${catgs}">
                             <a href="#" th:text="${ctg.name}"></a>
                         </li>

@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by MM on 19.06.2016.
- */
 @Service("stuffUserDetailsService")
 @Configurable
 public class StuffUserDetailService implements UserDetailsService {

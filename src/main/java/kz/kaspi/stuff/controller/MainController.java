@@ -105,7 +105,7 @@ public class MainController {
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         userDAO.add(u);
-        Credential c = new Credential(u.getUserId(), profile.getPic(), "");
+        Credential c = new Credential(u.getUserId(), profile.getPassword(), "");
         credDAO.add(c);
         return "redirect: profile?id=" + u.getUserId();
     }
