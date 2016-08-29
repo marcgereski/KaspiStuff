@@ -97,4 +97,8 @@ public class User {
     public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
     }
+
+    public Credential getCredential() {
+        return credential;
+    }
 }

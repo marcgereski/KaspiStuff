@@ -34,7 +34,7 @@ public class CredDoaImpl implements CredDAO {
         Query query = sessionFactory.openSession().createQuery(hql);
         query.setString("token", token);
         Credential cred = (Credential) query.uniqueResult();
-        return cred.getUser();
+        return cred != null ? cred.getUser() : null;
     }
 
     @Override
