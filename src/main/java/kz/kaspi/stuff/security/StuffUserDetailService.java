@@ -36,7 +36,7 @@ public class StuffUserDetailService implements UserDetailsService {
         if (user == null) {
             System.out.println("User not found");
             throw new UsernameNotFoundException("Username not found");
-        }        Credential credential = credDAO.get(user.getUserId());
+        }        Credential credential = credDAO.getUserByToken(user.getUserId());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

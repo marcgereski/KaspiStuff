@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -29,6 +26,7 @@ public class MainController {
     public static final String REDIRECT_LOGIN = "redirect: login";
     public static final String HEADING = "where's my stuff???";
     public static final String NOT_ENOUGH_RIGHTS = "Not enough rights";
+    public static final String REDIRECT_TO_MAIN = "redirect:/";
 
     @Autowired
     private UserDAO userDAO;
@@ -59,7 +57,7 @@ public class MainController {
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/";
+        return REDIRECT_TO_MAIN;
     }
 
     @RequestMapping(value = "profile", method = RequestMethod.GET)
@@ -147,6 +145,9 @@ public class MainController {
 
     @RequestMapping(value = "add-question-form", method = RequestMethod.GET)
     public String addQuestionForm(ModelMap model) {
+        String username = getAuthenticatedUsername();
+        if (username.isEmpty()) return REDIRECT_TO_MAIN;
+
         List<Category> catgs = categoryDAO.getList();
         model.addAttribute("catgs", catgs);
         model.addAttribute("heading", HEADING);
@@ -155,8 +156,7 @@ public class MainController {
 
     @RequestMapping(value = "add-question", method = RequestMethod.POST)
     public Response addQuestion(@RequestBody QuestionTeplate questionTemp) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String u = auth.getName();
+        String u = getAuthenticatedUsername();
         if (u.isEmpty()) return new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
 
         User user = userDAO.get(u);
@@ -173,8 +173,7 @@ public class MainController {
 
     @RequestMapping(value = "add-answer", method = RequestMethod.POST)
     public Response addAnswer(@RequestBody AnswerTemplate answerTemp) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String u = auth.getName();
+        String u = getAuthenticatedUsername();
         if (u.isEmpty()) new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
 
         User user = userDAO.get(u);
@@ -189,12 +188,15 @@ public class MainController {
         return new Response(Response.Status.OK, "Succeed");
     }
 
-    private boolean haveAccess() {
+    private String getAuthenticatedUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
         String token = details.getTokenValue();
-        String u = auth.getName();
-
-        return false;
+        if (token != null) {
+            User user = credDAO.getUserByToken(token);
+            return user.getUsername();
+        } else {
+            return auth.getName();
+        }
     }
 }

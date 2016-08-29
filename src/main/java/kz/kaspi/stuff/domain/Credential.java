@@ -15,6 +15,10 @@ public class Credential {
     @Column(name = "TOKEN")
     private String token;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_USER_ID")
+    private User user;
+
     public Credential() {
     }
 
@@ -46,5 +50,9 @@ public class Credential {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

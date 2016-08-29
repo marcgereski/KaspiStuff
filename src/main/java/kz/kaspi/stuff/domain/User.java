@@ -30,6 +30,9 @@ public class User {
     @Column(name = "PIC")
     private String pic;
 
+    @OneToOne(mappedBy = "user")
+    private Credential credential;
+
     public User() {
     }
 
