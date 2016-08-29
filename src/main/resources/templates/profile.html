@@ -123,30 +123,6 @@
             xhr.setRequestHeader(header, token);
         });
     });
-
-    function submitProfile() {
-        var uid = document.getElementById("userId").value;
-        var user = {
-            userid: uid,
-            username: document.getElementById("username").value,
-            email: document.getElementById("email").value,
-            role: document.getElementById("role").value,
-            pic: document.getElementById("image").src
-        };
-
-        $.ajax({
-            url: 'edit-user',
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(user),
-            contentType: 'application/json',
-            success: function (data) {
-                alert(data.status + ": " + data.message);
-            }, error: function () {
-                alert(data.status + ": " + data.message);
-            }
-        });
-    }
 </script>
 
 </body>
