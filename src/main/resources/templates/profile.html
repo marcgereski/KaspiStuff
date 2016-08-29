@@ -42,31 +42,33 @@
                                         <div id="preview">
                                             <img id="image" th:src="${user.pic}"/>
                                         </div>
-                                        <input type="file" id="the-photo-file-field"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="username" class="col-xs-2">username:</label>
                                     <div class="col-xs-10">
-                                        <input type="text" class="form-control" id="username" th:value="${user.username}"/>
+                                        <input type="text" class="form-control" id="username"
+                                               th:value="${user.username}" readonly="readonly"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email" class="col-xs-2">email:</label>
                                     <div class="col-xs-10">
-                                        <input type="text" class="form-control" id="email" th:value="${user.email}"/>
+                                        <input type="text" class="form-control" id="email" th:value="${user.email}"
+                                               readonly="readonly"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="role" class="col-xs-2">role:</label>
                                     <div class="col-xs-10">
-                                        <input type="text" class="form-control" id="role" th:value="${user.role.role}" readonly="readonly" />
+                                        <input type="text" class="form-control" id="role" th:value="${user.role.role}"
+                                               readonly="readonly"/>
                                     </div>
                                 </div>
 
                                 <div class="col-xs-10 col-xs-offset-2">
-                                    <button id="save" class="btn btn-primary" onclick="submitProfile()">save</button>
-                                    <button id="back" class="btn btn-default" onclick="window.history.back()">back</button>
+                                    <button id="back" class="btn btn-default" onclick="window.history.back()">back
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -77,7 +79,7 @@
     </div>
 </div>
 
-<input id="userId" type="hidden" th:value="${user.userId}" />
+<input id="userId" type="hidden" th:value="${user.userId}"/>
 
 
 <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
@@ -146,5 +148,6 @@
         });
     }
 </script>
+
 </body>
 </html>
