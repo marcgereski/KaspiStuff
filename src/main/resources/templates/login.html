@@ -17,6 +17,24 @@
 
 <body ng-app="app" ng-controller="home as home">
 <div class="container">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>where's my stuff?</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                        <span ng-show="home.authenticated">
+                            <a href="#"><span ng-bind="home.user"></span></a>
+                            <br/>
+                            <a href="/login">logout</a>
+                        </span>
+                <span ng-show="!home.authenticated">
+                            <a href="/login">sign in</a>
+                        </span>
+            </div>
+        </div>
+    </div>
+
     <!--    <div>
             With Facebook: <a href="/login/facebook">click here</a>
         </div>-->
@@ -41,7 +59,7 @@
                 <div class="form-group" ng-show="home.authenticated">
                     <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
                 </div>
-                <button id="back_" class="btn btn-default" onclick="window.location.href='/all-questions'">back
+                <button id="back_" class="btn btn-success" onclick="window.location.href='/all-questions'">guest session
                 </button>
             </td>
             <td>
