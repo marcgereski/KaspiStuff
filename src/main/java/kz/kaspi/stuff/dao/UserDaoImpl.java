@@ -1,7 +1,6 @@
 package kz.kaspi.stuff.dao;
 
 
-
 import kz.kaspi.stuff.domain.User;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -35,7 +34,7 @@ public class UserDaoImpl implements UserDAO {
     public void add(User user) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save(user);
+        session.saveOrUpdate(user);
         session.getTransaction().commit();
         session.close();
     }

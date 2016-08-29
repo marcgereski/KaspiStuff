@@ -28,8 +28,8 @@
                     <h1 ng-show="home.authenticated">logout</h1>
 
                     <form action="/login/simple" method="post">
-                        <div class="form-group"><input type="text" name="username" value="Mathew" placeholder="username"/></div>
-                        <div class="form-group"><input type="password" name="password" value="12345" placeholder="password"/></div>
+                        <div class="form-group"><input type="text" name="username" value="" placeholder="username"/></div>
+                        <div class="form-group"><input type="password" name="password" value="" placeholder="password"/></div>
                         <div class="form-group" ng-show="!home.authenticated">
                             <button type="submit" class="btn btn-primary">sign in</button>
                         </div>
@@ -46,12 +46,12 @@
             </td>
             <td>
                 <div class="form-group" ng-show="!home.authenticated">
-                    <h1 ng-show="!home.authenticated">sign out</h1>
+                    <h1 ng-show="!home.authenticated">signup</h1>
                         <div class="form-group"><input type="text" id="username" placeholder="username"/></div>
                         <div class="form-group"><input type="text" id="email" placeholder="email"/></div>
                         <div class="form-group"><input type="password" id="password" placeholder="password"/></div>
                         <div class="form-group" ng-show="!home.authenticated">
-                            <button class="btn btn-primary" onclick="submitProfile()">sign out</button>
+                            <button class="btn btn-primary" onclick="submitProfile()">sign up</button>
                         </div>
                 </div>
             </td>
@@ -92,7 +92,7 @@
     });
 </script>
 
-<script>
+<!--<script>
     $(function () {
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
@@ -100,7 +100,7 @@
             xhr.setRequestHeader(header, token);
         });
     });
-</script>
+</script>-->
 
 <script>
     function submitProfile() {
@@ -116,8 +116,7 @@
         $.ajax({
             url: 'add-user',
             type: 'POST',
-            dataType: 'json',
-            data: user,
+            data: JSON.stringify(user),
             contentType: 'application/json',
             success: function (data) {
                 alert(data.status + ": " + data.message);

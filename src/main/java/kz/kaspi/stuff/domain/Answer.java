@@ -7,7 +7,7 @@ import java.sql.Date;
 @Table(name = "ANSWERS")
 public class Answer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ANSWER_ID")
     private Long answerId;
 

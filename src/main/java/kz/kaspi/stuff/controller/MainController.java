@@ -10,10 +10,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -100,17 +97,19 @@ public class MainController {
     }
 
     @RequestMapping(value = "add-user", method = RequestMethod.POST)
-    public String addUser(@RequestBody Profile profile) throws SQLException, IOException {
+    @ResponseBody
+    public Response addUser(@RequestBody Profile profile) throws SQLException, IOException {
 
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         userDAO.add(u);
         Credential c = new Credential(u.getUserId(), profile.getPassword(), "");
         credDAO.add(c);
-        return "redirect: profile?id=" + u.getUserId();
+        return new Response(Response.Status.OK, "Saved");
     }
 
     @RequestMapping(value = "edit-user", method = RequestMethod.POST)
+    @ResponseBody
     public Response editUser(@RequestBody Profile profile) throws SQLException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName();
