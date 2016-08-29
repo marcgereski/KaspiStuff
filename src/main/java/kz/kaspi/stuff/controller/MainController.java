@@ -5,6 +5,7 @@ import kz.kaspi.stuff.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,7 +104,7 @@ public class MainController {
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         userDAO.add(u);
-        Credential c = new Credential(u.getUserId(), profile.getPic());
+        Credential c = new Credential(u.getUserId(), profile.getPic(), "");
         credDAO.add(c);
         return "redirect: profile?id=" + u.getUserId();
     }
@@ -186,5 +187,14 @@ public class MainController {
                 user);
         answerDAO.add(question);
         return new Response(Response.Status.OK, "Succeed");
+    }
+
+    private boolean haveAccess() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+        String token = details.getTokenValue();
+        String u = auth.getName();
+
+        return false;
     }
 }

@@ -12,12 +12,16 @@ public class Credential {
     @Column(name = "PASS")
     private String pass;
 
+    @Column(name = "TOKEN")
+    private String token;
+
     public Credential() {
     }
 
-    public Credential(Long userId, String pass) {
+    public Credential(Long userId, String pass, String token) {
         this.userId = userId;
         this.pass = pass;
+        this.token = token;
     }
 
     public Long getUserId() {
@@ -34,5 +38,13 @@ public class Credential {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
