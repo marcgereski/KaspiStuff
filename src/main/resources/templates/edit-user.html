@@ -23,7 +23,8 @@
                     </div>
                     <div class="col-sm-6 text-right">
                         <span ng-show="home.authenticated">
-                            <a href="#"><span ng-bind="home.user"></span></a>
+                            <a href="profile">
+                                <span ng-bind="home.user"></span></a>
                         </span>
                         <span ng-show="!home.authenticated">
                             <a href="/login">sign in</a>

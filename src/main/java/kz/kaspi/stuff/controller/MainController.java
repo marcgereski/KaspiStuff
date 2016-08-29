@@ -53,25 +53,26 @@ public class MainController {
         return "login";
     }
 
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
+        if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return REDIRECT_TO_MAIN;
     }
 
     @RequestMapping(value = "profile", method = RequestMethod.GET)
-    public String showProfile(ModelMap model, @RequestParam(value = "id", required = false) Long id) throws SQLException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String showProfile(ModelMap model,
+                              @RequestParam(value = "id", required = false) Long id) throws SQLException {
 
-        if (auth == null) return REDIRECT_LOGIN;
-        String name = auth.getName();
+        String name = getAuthenticatedUsername();
+        if (name == null) return REDIRECT_LOGIN;
 
         User u;
-        if (id == null) u = userDAO.get(name);
-        else u = userDAO.get(id);
+        if (id == null) {
+            u = userDAO.get(name);
+        } else u = userDAO.get(id);
 
         if (u == null) return REDIRECT_LOGIN;
 
@@ -138,7 +139,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "question", method = RequestMethod.GET)
-    public String getQuestion(ModelMap model, @RequestParam (value = "id") Long id) {
+    public String getQuestion(ModelMap model, @RequestParam(value = "id") Long id) {
         Question questions = questionDAO.get(id);
         model.addAttribute("quest", questions);
         model.addAttribute("heading", HEADING);

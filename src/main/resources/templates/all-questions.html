@@ -23,7 +23,9 @@
                     </div>
                     <div class="col-sm-6 text-right">
                         <span ng-show="home.authenticated">
-                            <a href="#"><span ng-bind="home.user"></span></a>
+                            <a href="profile"><span ng-bind="home.user"></span></a>
+                            <br/>
+                            <a href="/login">logout</a>
                         </span>
                         <span ng-show="!home.authenticated">
                             <a href="/login">sign in</a>
@@ -42,7 +44,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" ng-show="home.authenticated">
                     <form action="add-question-form" method="get" style="margin-right: 16px" class="pull-right">
                         <input class="btn btn-primary" type="submit" value="ask question"/>
                     </form>
