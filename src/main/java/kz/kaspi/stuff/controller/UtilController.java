@@ -18,6 +18,6 @@ public class UtilController {
             errorMessage = throwable.getMessage();
         }
         model.addAttribute("errorMessage", errorMessage);
-        return "error.html";
+        return "error";
     }
 }

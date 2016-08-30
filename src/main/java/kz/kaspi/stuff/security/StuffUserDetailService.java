@@ -4,6 +4,8 @@ import kz.kaspi.stuff.dao.CredDAO;
 import kz.kaspi.stuff.dao.UserDAO;
 import kz.kaspi.stuff.domain.Credential;
 import kz.kaspi.stuff.domain.User;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.catalina.servlet4preview.http.HttpServletRequestWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.GrantedAuthority;

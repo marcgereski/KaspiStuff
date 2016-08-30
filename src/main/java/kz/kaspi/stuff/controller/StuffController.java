@@ -5,6 +5,7 @@ import kz.kaspi.stuff.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -118,10 +119,12 @@ public class StuffController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName();
 
-        if (name.isEmpty())
-            return new Response(Response.Status.ERROR, "Name is empty");
-        if (!name.equals(profile.getUsername()))
-            return new Response(Response.Status.ERROR, "Wrong user");
+        Response response;
+        if (name.isEmpty() || !name.equals(profile.getUsername())) {
+            response = new Response(Response.Code.PreconditionFailed,
+                    new UsernameNotFoundException("Incorrect username or password"));
+            response.sendRedirect("error");
+        }
 
         User u = userDAO.get(profile.getUserid());
         if (profile.hasUsername()) u.setUsername(profile.getUsername());
