@@ -2,7 +2,9 @@ package kz.kaspi.stuff.controller;
 
 
 import kz.kaspi.stuff.dao.*;
-import kz.kaspi.stuff.domain.*;
+import kz.kaspi.stuff.domain.Answer;
+import kz.kaspi.stuff.domain.Question;
+import kz.kaspi.stuff.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,7 +39,7 @@ public class HelloController {
 			System.out.println(u.getUsername());
 			System.out.println(u.getRole().getRole());
 		}
-		model.addAttribute("message", "Hello world!");
+		model.addAttribute("users", us);
 		return "hello";
 	}
 
@@ -49,7 +51,7 @@ public class HelloController {
 //			Hibernate.initialize(u.getCategory());
 			System.out.println(u.getCategory().getName());
 		}
-		model.addAttribute("message", "Hello world!");
+		model.addAttribute("quests", us);
 		return "hello";
 	}
 

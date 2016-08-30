@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class MainController {
+public class StuffController {
     public static final String REDIRECT_LOGIN = "redirect: login";
     public static final String HEADING = "where's my stuff???";
     public static final String NOT_ENOUGH_RIGHTS = "Not enough rights";

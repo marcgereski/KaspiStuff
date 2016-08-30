@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error page</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="form-group">
+        <!--/*@thymesVar id="errorCode" type="kz.kaspi.stuff.controller.UtilController"*/-->
+        <h1 th:text="${errorCode}">500</h1>
+        <!--/*@thymesVar id="errorMessage" type="kz.kaspi.stuff.controller.UtilController"*/-->
+        <p th:text="${errorMessage}">java.lang.NullPointerException</p>
+
+        <button id="back" class="btn btn-primary"
+                onclick="window.location.href='/all-questions'">back
+        </button>
+    </div>
+</div>
+</body>
+</html>
