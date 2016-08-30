@@ -1,14 +1,15 @@
 package kz.kaspi.stuff.domain;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.ui.ModelMap;
 
-public class Response extends org.apache.catalina.connector.Response {
+public class Response extends org.apache.catalina.connector.Response{
 
     public static enum Status {
-        ERROR, OK
+        ERROR, AUTHORIZATION_ERROR, DATA_ERROR, OK
     }
 
     public static enum Code {
+        OK(200),
         PageNotFound(404),
         NotAcceptable(406),
         PreconditionFailed(412);
@@ -24,42 +25,23 @@ public class Response extends org.apache.catalina.connector.Response {
         }
     }
 
-    public static final String ERROR_STATUS_CODE_KEY = "javax.servlet.error.status_code";
-    public static final String ERROR_EXCEPTION_KEY = "javax.servlet.error.exception";
-
     private Status status;
-
     private String message;
-
-    private String code = "";
-
-    private Throwable exception = new Exception();
+    private final ModelMap map = new ModelMap();
 
     public Response() {
-        super();
-    }
-
-    public Response(Code code, Throwable exception) {
-        this.code = String.valueOf(code.getVal());
-        this.exception = exception;
     }
 
     public Response(Status status, String message) {
-        super();
         this.status = status;
         this.message = message;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setException(Throwable exception) {
-        this.exception = exception;
+        map.addAttribute("code", status);
+        map.addAttribute("message", message);
     }
 
     public void setStatus(Status status) {
         this.status = status;
+        map.addAttribute("code", status);
     }
 
     public String getMessage() {
@@ -68,6 +50,7 @@ public class Response extends org.apache.catalina.connector.Response {
 
     public void setMessage(String message) {
         this.message = message;
+        map.addAttribute("message", message);
     }
 
 

@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 public class UtilController {
     @RequestMapping("error.html")
     public String error(HttpServletRequest request, Model model) {
-        model.addAttribute("errorCode", request.getAttribute("javax.servlet.error.status_code"));
+        model.addAttribute("code", request.getAttribute("javax.servlet.error.status_code"));
         Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
         String errorMessage = null;
         if (throwable != null) {
             errorMessage = throwable.getMessage();
         }
-        model.addAttribute("errorMessage", errorMessage);
+        model.addAttribute("message", errorMessage);
         return "error";
     }
 }

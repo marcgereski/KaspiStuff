@@ -28,6 +28,7 @@ public class StuffController {
     public static final String HEADING = "where's my stuff???";
     public static final String NOT_ENOUGH_RIGHTS = "Not enough rights";
     public static final String REDIRECT_TO_MAIN = "redirect:/";
+    public static final String INCORRECT_USERNAME_OR_PASSWORD = "Incorrect username or password";
 
     @Autowired
     private UserDAO userDAO;
@@ -121,8 +122,7 @@ public class StuffController {
 
         Response response;
         if (name.isEmpty() || !name.equals(profile.getUsername())) {
-            response = new Response(Response.Code.PreconditionFailed,
-                    new UsernameNotFoundException("Incorrect username or password"));
+            response = new Response(Response.Status.AUTHORIZATION_ERROR, INCORRECT_USERNAME_OR_PASSWORD);
             response.sendRedirect("error");
             return response;
         }
@@ -170,16 +170,14 @@ public class StuffController {
         Response response;
 
         if (u == null) {
-            response = new Response(Response.Code.PreconditionFailed,
-                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             response.sendRedirect("error");
             return response;
         }
 
         User user = userDAO.get(u);
         if (user == null) {
-            response = new Response(Response.Code.PreconditionFailed,
-                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             response.sendRedirect("error");
             return response;
         }
@@ -199,16 +197,14 @@ public class StuffController {
         Response response;
 
         if (u == null) {
-            response = new Response(Response.Code.PreconditionFailed,
-                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             response.sendRedirect("error");
             return response;
         }
 
         User user = userDAO.get(u);
         if (user == null) {
-            response = new Response(Response.Code.PreconditionFailed,
-                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             response.sendRedirect("error");
             return response;
         }
