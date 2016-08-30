@@ -5,6 +5,7 @@ import kz.kaspi.stuff.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -44,6 +45,9 @@ public class StuffController {
 
     @Autowired
     private AnswerDAO answerDAO;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String loginPage() {
@@ -103,7 +107,7 @@ public class StuffController {
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         userDAO.add(u);
-        Credential c = new Credential(u.getUserId(), profile.getPassword(), "");
+        Credential c = new Credential(u.getUserId(), passwordEncoder.encode(profile.getPassword()), "");
         credDAO.add(c);
         return new Response(Response.Status.OK, "Saved");
     }
