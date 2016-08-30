@@ -124,6 +124,7 @@ public class StuffController {
             response = new Response(Response.Code.PreconditionFailed,
                     new UsernameNotFoundException("Incorrect username or password"));
             response.sendRedirect("error");
+            return response;
         }
 
         User u = userDAO.get(profile.getUserid());
@@ -164,12 +165,24 @@ public class StuffController {
     }
 
     @RequestMapping(value = "add-question", method = RequestMethod.POST)
-    public Response addQuestion(@RequestBody QuestionTeplate questionTemp) {
+    public Response addQuestion(@RequestBody QuestionTeplate questionTemp) throws IOException {
         String u = getAuthenticatedUsername();
-        if (u == null) return new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
+        Response response;
+
+        if (u == null) {
+            response = new Response(Response.Code.PreconditionFailed,
+                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response.sendRedirect("error");
+            return response;
+        }
 
         User user = userDAO.get(u);
-        if (user == null) return new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
+        if (user == null) {
+            response = new Response(Response.Code.PreconditionFailed,
+                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response.sendRedirect("error");
+            return response;
+        }
 
         Category catg = categoryDAO.get(questionTemp.getCategoryId());
         Question question = new Question(questionTemp.getDescription(),
@@ -181,12 +194,24 @@ public class StuffController {
     }
 
     @RequestMapping(value = "add-answer", method = RequestMethod.POST)
-    public Response addAnswer(@RequestBody AnswerTemplate answerTemp) {
+    public Response addAnswer(@RequestBody AnswerTemplate answerTemp) throws IOException {
         String u = getAuthenticatedUsername();
-        if (u == null) new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
+        Response response;
+
+        if (u == null) {
+            response = new Response(Response.Code.PreconditionFailed,
+                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response.sendRedirect("error");
+            return response;
+        }
 
         User user = userDAO.get(u);
-        if (user == null) new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
+        if (user == null) {
+            response = new Response(Response.Code.PreconditionFailed,
+                    new UsernameNotFoundException(NOT_ENOUGH_RIGHTS));
+            response.sendRedirect("error");
+            return response;
+        }
 
         Question quest = questionDAO.get(answerTemp.getQuestionId());
         Answer question = new Answer(answerTemp.getInformation(),

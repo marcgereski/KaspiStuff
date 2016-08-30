@@ -6,6 +6,8 @@ import kz.kaspi.stuff.domain.Credential;
 import kz.kaspi.stuff.domain.User;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.catalina.servlet4preview.http.HttpServletRequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,14 +31,17 @@ public class StuffUserDetailService implements UserDetailsService {
     @Autowired
     private CredDAO credDAO;
 
+    private static final Logger log = LoggerFactory.getLogger(StuffUserDetailService.class);
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDAO.get(s);
-        System.out.println("User : " + user);
+        log.info("Authorizing User : " + user);
         if (user == null) {
-            System.out.println("User not found");
-            throw new UsernameNotFoundException("Username not found");
-        }        Credential credential = credDAO.getUserByToken(user.getUserId());
+            log.error("User not found");
+            throw new UsernameNotFoundException("User not found");
+        }
+        Credential credential = credDAO.getUserByToken(user.getUserId());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -47,7 +52,7 @@ public class StuffUserDetailService implements UserDetailsService {
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRole()));
-        System.out.print("authorities :" + authorities);
+        log.debug("authorities : " + authorities);
         return authorities;
     }
 }
