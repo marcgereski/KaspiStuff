@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS USER;
 drop sequence if exists hibernate_sequence;
 
 CREATE TABLE role(role_id BIGINT AUTO_INCREMENT PRIMARY KEY,right VARCHAR(128) NOT NULL);
-CREATE TABLE user(user_id BIGINT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(128),pic LONGBLOB,email VARCHAR(128),fk_role_id BIGINT);
+CREATE TABLE user(user_id BIGINT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(128),pic BLOB,email VARCHAR(128),fk_role_id BIGINT);
 CREATE TABLE category(category_id BIGINT,name VARCHAR(45) NOT NULL);
 CREATE TABLE credentials(fk_user_id BIGINT NOT NULL,pass VARCHAR(2048), token VARCHAR(2048));
 CREATE TABLE answers(answer_id BIGINT AUTO_INCREMENT PRIMARY KEY,information VARCHAR(128),fk_question_id BIGINT NOT NULL,fk_user_id BIGINT NOT NULL,date DATE,);

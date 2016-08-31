@@ -45,7 +45,9 @@
                                     <label for="ctg-select" class="col-xs-2">category:</label>
                                     <div class="col-xs-10">
                                         <select id="ctg-select">
-                                            <option th:each="ctg : ${catgs}" th:value="${ctg.categoryId}" th:text="${ctg.name}"></option>
+                                            <option th:each="ctg : ${catgs}"
+                                                    th:value="${ctg.categoryId}"
+                                                    th:text="${ctg.name}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -63,9 +65,14 @@
                                 </div>
 
                                 <div class="col-xs-10 col-xs-offset-2">
-                                    <button type="button" class="btn btn-primary" onclick="submit()">Post your question</button>
-                                    <button id="back" class="btn btn-default" onclick="window.location.href='/all-questions'">back</button>
+                                    <button class="btn btn-primary" onclick="submitQuestion()">Post your question
+                                    </button>
+                                    <button id="back" class="btn btn-default"
+                                            onclick="window.location.href='/all-questions'">back
+                                    </button>
                                 </div>
+
+                                <input id='submitted' type="hidden" value="false" />
                             </form>
                         </div>
                     </div>
@@ -75,6 +82,45 @@
     </div>
 </div>
 
+<script>
+    function submitQuestion() {
+        $('textarea').each(function () {
+            if (this.value == "") {
+                $(this).css('background-color', '#FFB6C1');
+                $(this).attr("placeholder", "Must be filled");
+                $("#submitted").val(false);
+            } else {
+                $(this).css('background-color', 'white');
+                $(this).attr("placeholder", "Must be filled");
+                $("#submitted").val(true);
+            }
+        });
+
+        if ($("#submitted").val() == "false") return;
+
+        var select = document.getElementById("ctg-select");
+
+        var question = {
+            description: document.getElementById("title").value,
+            text: document.getElementById("text").value,
+            categoryId: select.options[select.selectedIndex].value
+        };
+
+        $.ajax({
+            url: 'add-question',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(question),
+            contentType: 'application/json',
+            success: function (data) {
+                alert(data.code + ": " + data.message);
+                window.location.href = '/'
+            }, error: function (data) {
+                alert(data.code + ": " + data.message);
+            }
+        });
+    }
+</script>
 
 <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 <script type="text/javascript">
@@ -102,45 +148,11 @@
                 self.authenticated = false;
                 $location.path("/");
             }).error(function (data) {
-                console.log("Logout failed")
+                console.log("Logout failed");
                 self.authenticated = false;
             });
         };
     });
-</script>
-
-<script>
-    $(function () {
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
-        $(document).ajaxSend(function (e, xhr, options) {
-            xhr.setRequestHeader(header, token);
-        });
-    });
-
-    function submit() {
-        var select = document.getElementById("ctg-select");
-
-        var question = {
-            description: document.getElementById("title").value,
-            text: document.getElementById("text").value,
-            categoryId: select.options[select.selectedIndex].value
-        };
-
-        $.ajax({
-            url: 'add-question',
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(question),
-            contentType: 'application/json',
-            success: function (data) {
-                alert(data.status + ": " + data.message);
-                location.reload();
-            }, error: function (data) {
-                alert(data.status + ": " + data.message);
-            }
-        });
-    }
 </script>
 </body>
 </html>

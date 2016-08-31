@@ -2,29 +2,35 @@ package kz.kaspi.stuff.domain;
 
 import org.springframework.ui.ModelMap;
 
-public class Response extends org.apache.catalina.connector.Response{
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class Response {
 
     public static enum Status {
         ERROR, AUTHORIZATION_ERROR, DATA_ERROR, OK
     }
 
-    private Status status;
+    private Status code;
     private String message;
+    private final HttpServletResponse response;
     private final ModelMap map = new ModelMap();
 
-    public Response() {
+    public Response(HttpServletResponse response) {
+        this.response = response;
     }
 
-    public Response(Status status, String message) {
-        this.status = status;
+    public Response(HttpServletResponse response, Status code, String message) {
+        this.response = response;
+        this.code = code;
         this.message = message;
-        map.addAttribute("code", status);
+        map.addAttribute("code", code);
         map.addAttribute("message", message);
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-        map.addAttribute("code", status);
+    public void setCode(Status code) {
+        this.code = code;
+        map.addAttribute("code", code);
     }
 
     public String getMessage() {
@@ -36,5 +42,11 @@ public class Response extends org.apache.catalina.connector.Response{
         map.addAttribute("message", message);
     }
 
+    public String getCode() {
+        return code.toString();
+    }
 
+    public void sendRedirect(String target) throws IOException {
+        response.sendRedirect(target);
+    }
 }

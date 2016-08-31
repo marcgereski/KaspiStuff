@@ -123,31 +123,38 @@
 </script>
 
 <script>
-    $(function () {
+/*    $(function () {
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader(header, token);
         });
-    });
+    });*/
 
     function submit() {
+        var info = document.getElementById("text");
+        if (info.value == "") {
+            $(info).attr("placeholder", "Must be filled");
+            $(info).css('background-color', '#FFB6C1');
+            return;
+        }
+
         var answer = {
             questionId: document.getElementById("questionId").value,
-            information: document.getElementById("text").value
+            information: info.value
         };
 
         $.ajax({
             url: 'add-answer',
             type: 'POST',
-            dataType: 'json',
             data: JSON.stringify(answer),
             contentType: 'application/json',
             success: function (data) {
-                alert(data.status + ": " + data.message);
-                location.reload();
-            }, error: function (data) {
-                alert(data.status + ": " + data.message);
+                alert(data.code + ": " + data.message);
+                window.location.reload();
+            }, error: function () {
+                alert(data.code + ": " + data.message);
+                window.location.reload();
             }
         });
     }

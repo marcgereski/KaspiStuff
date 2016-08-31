@@ -104,26 +104,25 @@ public class StuffController {
 
     @RequestMapping(value = "add-user", method = RequestMethod.POST)
     @ResponseBody
-    public Response addUser(@RequestBody Profile profile) throws SQLException, IOException {
+    public Response addUser(@RequestBody Profile profile, HttpServletResponse httpResponse) throws SQLException, IOException {
 
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         userDAO.add(u);
         Credential c = new Credential(u.getUserId(), passwordEncoder.encode(profile.getPassword()), "");
         credDAO.add(c);
-        return new Response(Response.Status.OK, "Saved");
+        return new Response(httpResponse, Response.Status.OK, "User was successfully added");
     }
 
     @RequestMapping(value = "edit-user", method = RequestMethod.POST)
     @ResponseBody
-    public Response editUser(@RequestBody Profile profile) throws SQLException, IOException {
+    public Response editUser(@RequestBody Profile profile, HttpServletResponse httpResponse) throws SQLException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName();
 
         Response response;
         if (name.isEmpty() || !name.equals(profile.getUsername())) {
-            response = new Response(Response.Status.AUTHORIZATION_ERROR, INCORRECT_USERNAME_OR_PASSWORD);
-            response.sendRedirect("error");
+            response = new Response(httpResponse, Response.Status.AUTHORIZATION_ERROR, INCORRECT_USERNAME_OR_PASSWORD);
             return response;
         }
 
@@ -132,7 +131,7 @@ public class StuffController {
         if (profile.hasEmail()) u.setEmail(profile.getEmail());
         if (profile.hasPic()) u.setPic(profile.getPic());
         userDAO.update(u);
-        return new Response(Response.Status.OK, "Saved");
+        return new Response(null, Response.Status.OK, "Saved");
     }
 
     @RequestMapping(value = {"/", "all-questions"}, method = RequestMethod.GET)
@@ -165,20 +164,19 @@ public class StuffController {
     }
 
     @RequestMapping(value = "add-question", method = RequestMethod.POST)
-    public Response addQuestion(@RequestBody QuestionTeplate questionTemp) throws IOException {
+    @ResponseBody
+    public Response addQuestion(@RequestBody QuestionTeplate questionTemp, HttpServletResponse httpResponse) throws IOException {
         String u = getAuthenticatedUsername();
         Response response;
 
         if (u == null) {
-            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
-            response.sendRedirect("error");
+            response = new Response(httpResponse, Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             return response;
         }
 
         User user = userDAO.get(u);
         if (user == null) {
-            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
-            response.sendRedirect("error");
+            response = new Response(httpResponse, Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             return response;
         }
 
@@ -188,24 +186,23 @@ public class StuffController {
                 catg, user,
                 new java.sql.Date(new java.util.Date().getTime()));
         questionDAO.add(question);
-        return new Response(Response.Status.OK, "Succeed");
+        return new Response(httpResponse, Response.Status.OK, "Question added");
     }
 
     @RequestMapping(value = "add-answer", method = RequestMethod.POST)
-    public Response addAnswer(@RequestBody AnswerTemplate answerTemp) throws IOException {
+    @ResponseBody
+    public Response addAnswer(@RequestBody AnswerTemplate answerTemp, HttpServletResponse httpResponse) throws IOException {
         String u = getAuthenticatedUsername();
         Response response;
 
         if (u == null) {
-            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
-            response.sendRedirect("error");
+            response = new Response(httpResponse, Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             return response;
         }
 
         User user = userDAO.get(u);
         if (user == null) {
-            response = new Response(Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
-            response.sendRedirect("error");
+            response = new Response(httpResponse, Response.Status.ERROR, NOT_ENOUGH_RIGHTS);
             return response;
         }
 
@@ -215,7 +212,7 @@ public class StuffController {
                 quest,
                 user);
         answerDAO.add(question);
-        return new Response(Response.Status.OK, "Succeed");
+        return new Response(httpResponse, Response.Status.OK, "Answer was successfully added");
     }
 
     @SuppressWarnings("unchecked")

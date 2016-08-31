@@ -7,11 +7,9 @@
     <meta name="description" content=""/>
     <meta name="viewport" content="width=device-width"/>
     <base href="/"/>
-    <link rel="stylesheet" type="text/css"
-          href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript"
-            src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -46,20 +44,28 @@
                     <h1 ng-show="home.authenticated">logout</h1>
 
                     <form action="/login/simple" method="post">
-                        <div class="form-group"><input type="text" name="username" value="" placeholder="username"/>
-                        </div>
-                        <div class="form-group"><input type="password" name="password" value="" placeholder="password"/>
-                        </div>
                         <div class="form-group" ng-show="!home.authenticated">
+                            <div class="form-group">
+                                <input type="text" name="username" value="" placeholder="username"/>
+                            </div>
+                            <div class="form-group"><input type="password" name="password" value=""
+                                                           placeholder="password"/>
+                            </div>
                             <button type="submit" class="btn btn-primary">sign in</button>
                         </div>
                     </form>
                     <div class="form-group" ng-show="!home.authenticated">
-                        sign in using <a href="/login/google" class="btn btn-danger">Google</a>
+                        sign in using <a href="/login/google" class="btn btn-danger">Google+</a>
                     </div>
                 </div>
                 <div class="form-group" ng-show="home.authenticated">
-                    <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
+                    <div class="form-group">
+                        <input type="text" name="username" ng-value="home.user"/>
+                    </div>
+                    <div class="form-group">
+                        <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
+                        <button id="back" class="btn btn-success" onclick="window.location.href='/all-questions'">back</button>
+                    </div>
                 </div>
                 <div ng-show="!home.authenticated">
                     <button id="back_" class="btn btn-success" onclick="window.location.href='/all-questions'">guest
@@ -108,7 +114,7 @@
                 self.authenticated = false;
                 $location.path("/");
             }).error(function (data) {
-                console.log("Logout failed")
+                console.log("Logout failed");
                 self.authenticated = false;
             });
         };
@@ -127,11 +133,30 @@
 
 <script>
     function submitProfile() {
+        var login = document.getElementById("username");
+        var pass = document.getElementById("password");
+
+        if (login.value == "") {
+            $(login).attr("placeholder", "Must be filled");
+            $(login).css('background-color', '#FFB6C1');
+            return;
+        } else {
+            $(login).css('background-color', 'white');
+        }
+
+        if (pass.value == "") {
+            $(pass).attr("placeholder", "Must be filled");
+            $(pass).css('background-color', '#FFB6C1');
+            return;
+        } else {
+            $(pass).css('background-color', 'white');
+        }
+
         var user = {
             userid: 0,
-            username: document.getElementById("username").value,
+            username: login.value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
+            password: pass.value,
             role: "ROLE_USER",
             pic: ""
         };
@@ -142,9 +167,11 @@
             data: JSON.stringify(user),
             contentType: 'application/json',
             success: function (data) {
-                alert(data.status + ": " + data.message);
+                alert(data.code + ": " + data.message);
+                window.location.reload();
             }, error: function () {
-                alert(data.status + ": " + data.message);
+                alert(data.code + ": " + data.message);
+                window.location.reload();
             }
         });
     }
