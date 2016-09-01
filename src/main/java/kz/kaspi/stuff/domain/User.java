@@ -28,7 +28,7 @@ public class User {
     private Set<Answer> answers;
 
     @Column(name = "PIC")
-    private String pic;
+    private byte[] pic;
 
     @OneToOne(mappedBy = "user")
     private Credential credential;
@@ -75,11 +75,12 @@ public class User {
     }
 
     public String getPic() {
-        return pic;
+
+        return new String(pic);
     }
 
     public void setPic(String pic) {
-        this.pic = pic;
+        this.pic = pic.getBytes();
     }
 
     public Set<Question> getQuestions() {

@@ -108,6 +108,7 @@ public class StuffController {
 
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
+        u.setPic(profile.getPic());
         userDAO.add(u);
         Credential c = new Credential(u.getUserId(), passwordEncoder.encode(profile.getPassword()), "");
         credDAO.add(c);
