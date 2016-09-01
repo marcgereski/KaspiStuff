@@ -39,7 +39,8 @@
                     <ul>
                         <li style="display: inline">categories:</li>
                         <li style="display: inline" th:each="ctg : ${catgs}">
-                            <a href="#" th:text="${ctg.name}"></a>
+                            <a href="#" th:onclick="'javascript:filter(\'' + ${ctg.name} + '\');'"
+                               th:text="${ctg.name}"/>
                         </li>
                     </ul>
                 </div>
@@ -50,19 +51,21 @@
                 </div>
             </div>
             <div th:each="q : ${quests}">
-                <div class="well">
-                    <div>
-                        <p><span th:text="${q.answers.size()}"></span> answer(s)
-                            <a th:href="@{question?id=}+${q.questionId}">
-                                <span style="font-size: large; margin-left: 8em" th:text="${q.description}"></span>
-                            </a>
-                        </p>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">category: <span th:text="${q.category.name}"></span></div>
-                        <div class="col-sm-6 text-right">
-                            Publish date: <span th:text="${q.date}"></span>
-                            <a th:href="@{profile?id=}+${q.user.userId}" th:text="${q.user.username}"></a>
+                <div class="category" th:classappend="${q.category.name}">
+                    <div class="well">
+                        <div>
+                            <p><span th:text="${q.answers.size()}"></span> answer(s)
+                                <a th:href="@{question?id=}+${q.questionId}">
+                                    <span style="font-size: large; margin-left: 8em" th:text="${q.description}"></span>
+                                </a>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">category: <span th:text="${q.category.name}"></span></div>
+                            <div class="col-sm-6 text-right">
+                                Publish date: <span th:text="${q.date}"></span>
+                                <a th:href="@{profile?id=}+${q.user.userId}" th:text="${q.user.username}"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,11 +101,25 @@
                 self.authenticated = false;
                 $location.path("/");
             }).error(function (data) {
-                console.log("Logout failed")
+                console.log("Logout failed");
                 self.authenticated = false;
             });
         };
     });
+</script>
+
+<script>
+    function filter(categoryName) {
+        $('.category').each(function () {
+            var node = $(this);
+            if (this.className.indexOf(categoryName) > -1) {
+                node.show();
+            }
+            else {
+                node.hide();
+            }
+        })
+    }
 </script>
 
 <!--<script>
