@@ -38,6 +38,11 @@
                 <div class="col-sm-6">
                     <ul>
                         <li style="display: inline">categories:</li>
+                        <li style="display: inline">
+                            <a href="#" onclick="filter('all');">
+                                all
+                            </a>
+                        </li>
                         <li style="display: inline" th:each="ctg : ${catgs}">
                             <a href="#" th:onclick="'javascript:filter(\'' + ${ctg.name} + '\');'"
                                th:text="${ctg.name}"/>
@@ -113,6 +118,9 @@
         $('.category').each(function () {
             var node = $(this);
             if (this.className.indexOf(categoryName) > -1) {
+                node.show();
+            }
+            else if (categoryName == 'all'){
                 node.show();
             }
             else {
