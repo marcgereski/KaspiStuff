@@ -9,4 +9,5 @@ public interface UserDAO {
     User get(Long id);
     User get(String username);
     void update(User user);
+    boolean exists(String user);
 }

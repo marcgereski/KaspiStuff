@@ -27,6 +27,7 @@ public class StuffController {
     public static final String REDIRECT_LOGIN = "redirect: login";
     public static final String HEADING = "where's my stuff???";
     public static final String NOT_ENOUGH_RIGHTS = "Not enough rights";
+    public static final String EXISTS = "Such user or clientId exists";
     public static final String REDIRECT_TO_MAIN = "redirect:/";
     public static final String INCORRECT_USERNAME_OR_PASSWORD = "Incorrect username or password";
 
@@ -106,11 +107,19 @@ public class StuffController {
     @ResponseBody
     public Response addUser(@RequestBody Profile profile, HttpServletResponse httpResponse) throws SQLException, IOException {
 
+        if (userDAO.exists(profile.getUsername())) {
+            return new Response(httpResponse, Response.Status.ERROR, EXISTS);
+        }
+
+        if (credDAO.exists(profile.getToken())) {
+            return new Response(httpResponse, Response.Status.ERROR, EXISTS);
+        }
+
         Role role = roleDAO.getRole(profile.getRole());
         User u = new User(profile.getUsername(), profile.getEmail(), role);
         u.setPic(profile.getPic());
         userDAO.add(u);
-        Credential c = new Credential(u.getUserId(), passwordEncoder.encode(profile.getPassword()), "");
+        Credential c = new Credential(u.getUserId(), passwordEncoder.encode(profile.getPassword()), profile.getToken());
         credDAO.add(c);
         return new Response(httpResponse, Response.Status.OK, "User was successfully added");
     }
@@ -222,6 +231,9 @@ public class StuffController {
 
         String token = null;
         if (auth instanceof OAuth2Authentication) {
+//            clientId
+//            token = ((OAuth2Authentication)auth).getOAuth2Request().getClientId();
+
             LinkedHashMap<String, String> details = (LinkedHashMap<String, String>) ((OAuth2Authentication) auth)
                     .getUserAuthentication().getDetails();
             token = details.get("sub");

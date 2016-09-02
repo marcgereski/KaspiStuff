@@ -62,5 +62,13 @@ public class UserDaoImpl implements UserDAO {
         session.close();
     }
 
+    @Override
+    public boolean exists(String username) {
+        String hql = "FROM kz.kaspi.stuff.domain.User u WHERE u.username = :name";
+        Query query = sessionFactory.openSession().createQuery(hql);
+        query.setString("name", username);
+        return query.uniqueResult() != null;
+    }
+
 
 }

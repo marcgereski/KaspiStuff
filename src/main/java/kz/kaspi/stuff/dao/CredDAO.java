@@ -9,4 +9,5 @@ public interface CredDAO {
     Credential getUserByToken(Long userId);
     User getUserByToken(String token);
     void add(Credential credential);
+    boolean exists(String token);
 }

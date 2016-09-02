@@ -45,4 +45,12 @@ public class CredDoaImpl implements CredDAO {
         session.getTransaction().commit();
         session.close();
     }
+
+    @Override
+    public boolean exists(String token) {
+        String hql = "FROM kz.kaspi.stuff.domain.Credential c WHERE c.token = :token";
+        Query query = sessionFactory.openSession().createQuery(hql);
+        query.setString("token", token);
+        return query.uniqueResult() != null;
+    }
 }
